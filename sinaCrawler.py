@@ -42,7 +42,7 @@ def returnHrefTitleBody(List,TagList=''):
 
 def returnInternationalHrefTitleBody(List, TagList=''):
     specificList = {}
-    print(len(TagList))
+    # print(len(TagList))
     i = 0
     for title, href in List.items():
         url_new = href
@@ -52,7 +52,7 @@ def returnInternationalHrefTitleBody(List, TagList=''):
         bodyNews = soupNew.find('div', {'class': 'article'})
         # print(soupNew)
         timeDiv = soupNew.find('div', {'class': 'date-source'})
-        print(timeDiv)
+        # print(timeDiv)
         if timeDiv!=None:
             time = timeDiv.find('span').get_text()
         else:
@@ -73,9 +73,9 @@ def returnInternationalHrefTitleBody(List, TagList=''):
             # print(i)
 
         specificList[href] = {'title': title, 'time': output_date_str, 'tag': TagList[i], 'body': resultNews}
-        print(specificList)
+        # print(specificList)
         i += 1
-        print(i)
+        # print(i)
         if i>= len(TagList):
             break
     return specificList
@@ -222,7 +222,7 @@ db = SqlHelper()
 db.modify(f'truncate table sina_crawler_InternationalNews', [])
 article_list=[]
 for href,item in moreEconomicNewsSpecific.items():
-    print(href,item)
+    # print(href,item)
     ags_str = ','.join(item['tag'])
     article_list.append((item['title'],item['time'],ags_str,item['body']))
     # print(article_list)
@@ -273,7 +273,7 @@ while len(nationalNewsList)<100:
         nationalNewsList[nationalNewsItem.find('a').get_text()] = nationalNewsItem.find('a')['href']
 
     browser.execute_script("document.querySelector('.pagebox_next a').click();")
-    time.sleep(5)
+    time.sleep(2)
 # print(len(TagList))
 # 关闭浏览器
 browser.quit()
@@ -319,3 +319,5 @@ for href,item in returnLoaclHrefTitleBody(localNewsList).items():
     article_list.append((item['title'],item['time'],ags_str,item['body']))
     # print(article_list)
 db.multiple_modify(f'insert into sina_crawler_LocalNews values(null, %s, %s, %s, %s)', article_list)
+
+print('全部爬取完成')
