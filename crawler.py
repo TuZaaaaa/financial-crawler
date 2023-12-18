@@ -1,4 +1,5 @@
 import ssl
+import threading
 import time
 import urllib.request
 
@@ -18,56 +19,64 @@ class Article:
         self.tags = tags
 
 
-# 不显示浏览器
-chrome_options = Options()
-chrome_options.add_argument("--headless")
+def crawl(url, load_num, tb_num):
+    try:
+        # 不显示浏览器
+        chrome_options = Options()
+        chrome_options.add_argument("--headless")
 
-# url = 'https://company.cnstock.com/company/scp_gsxw/1'
-# page = urllib.request.urlopen(url)
-# soup = BeautifulSoup(page, 'html.parser')
-driver = webdriver.Chrome(options=chrome_options)
-driver.get('https://company.cnstock.com/company/scp_gsxw/1')
-soup = BeautifulSoup(driver.page_source, 'html.parser')
-# chrome_options.add_argument('--headless')
+        driver = webdriver.Chrome(options=chrome_options)
+        driver.get(url)
+        soup = BeautifulSoup(driver.page_source, 'html.parser')
+        # 数据库
+        db = SqlHelper()
+        article_list = []
+        # 所有 li
+        li = soup.select(f'#j_waterfall_list > li')
 
-db = SqlHelper()
+        # 加载到 100 条
+        while len(li) < load_num:
+            driver.execute_script("document.querySelector('#j_more_btn').click();")
+            soup = BeautifulSoup(driver.page_source, 'html.parser')
+            li = soup.select(f'#j_waterfall_list > li')
+            time.sleep(5)
+            print(len(li))
 
-article_list = []
-# 所有 li
-li = soup.select(f'#j_waterfall_list > li')
+        for item in li:
+            # 标签
+            tags = []
+            tag_selector = item.select('.info > .key')
+            for i in range(len(tag_selector)):
+                tags.append(tag_selector[i].contents[0])
+            tags_str = ','.join(tags)
+            content_url = item.select('h2 > a')[0]['href']
+            page = urllib.request.urlopen(content_url)
+            soup = BeautifulSoup(page, 'html.parser')
+            if not soup.select('.title'):
+                continue
+            # 标题
+            title = soup.select('.title')[0].get_text()
+            # 时间
+            upload_time = soup.select('.timer')[0].get_text()
+            # 内容
+            content = soup.select('#qmt_content_div')[0].get_text().strip()
+            article_list.append((title, upload_time, tags_str, content))
+        db.modify(f'truncate table crawler_tb{tb_num}', [])
+        db.multiple_modify(f'insert into crawler_tb{tb_num} values(null, %s, %s, %s, %s)', article_list)
+        print('finish')
+    except Exception as e:
+        print(f"爬取失败 {url}: {e}")
 
-# 加载到 100 条
-while len(li) < 100:
-    driver.execute_script("document.querySelector('#j_more_btn').click();")
-    # wait = WebDriverWait(driver, 10)
-    # new_page_element = wait.until(EC.presence_of_element_located((By.XPATH, '//div[@class="new-page-content"]')))
-    # wait.until(EC.presence_of_element_located((By.XPATH, '//div[@class="new-page-content"]')))
-    # print(driver.page_source)
 
-    soup = BeautifulSoup(driver.page_source, 'html.parser')
-    li = soup.select(f'#j_waterfall_list > li')
-    time.sleep(5)
-    print(len(li))
+if __name__ == '__main__':
+    urls = ['https://company.cnstock.com/company/scp_gsxw/1', 'https://ggjd.cnstock.com/company/scp_ggjd/tjd_bbdj', 'https://ggjd.cnstock.com/company/scp_ggjd/tjd_ggkx', 'https://jrz.cnstock.com/']
+    threads = []
+    # 加载的数量
+    load_num = 100
+    for i in range(len(urls)):
+        thread = threading.Thread(target=crawl, args=(urls[i], load_num, i + 1))
+        threads.append(thread)
+        thread.start()
 
-for item in li:
-    # 标签
-    tags = []
-    tag_selector = item.select('.info > .key')
-    for i in range(len(tag_selector)):
-        tags.append(tag_selector[i].contents[0])
-    tags_str = ','.join(tags)
-    content_url = item.select('h2 > a')[0]['href']
-    url = 'https://company.cnstock.com/company/scp_gsxw/1'
-    page = urllib.request.urlopen(content_url)
-    soup = BeautifulSoup(page, 'html.parser')
-    if not soup.select('.title'):
-        continue
-    # 标题
-    title = soup.select('.title')[0].get_text()
-    # 时间
-    time = soup.select('.timer')[0].get_text()
-    # 内容
-    content = soup.select('#qmt_content_div')[0].get_text().strip()
-    article_list.append((title, time, tags_str, content))
-db.multiple_modify('insert into crawler_tb1 values(null, %s, %s, %s, %s)', article_list)
-print('finish')
+    for thread in threads:
+        thread.join()
