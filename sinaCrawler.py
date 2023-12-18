@@ -273,7 +273,7 @@ while len(nationalNewsList)<100:
         nationalNewsList[nationalNewsItem.find('a').get_text()] = nationalNewsItem.find('a')['href']
 
     browser.execute_script("document.querySelector('.pagebox_next a').click();")
-    time.sleep(2)
+    time.sleep(1)
 # print(len(TagList))
 # 关闭浏览器
 browser.quit()
