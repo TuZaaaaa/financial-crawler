@@ -18,8 +18,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>661</width>
-     <height>561</height>
+     <width>831</width>
+     <height>571</height>
     </rect>
    </property>
    <property name="currentIndex">
@@ -29,10 +29,10 @@
     <widget class="QLabel" name="label_time">
      <property name="geometry">
       <rect>
-       <x>460</x>
-       <y>10</y>
-       <width>201</width>
-       <height>21</height>
+       <x>420</x>
+       <y>0</y>
+       <width>301</width>
+       <height>41</height>
       </rect>
      </property>
      <property name="font">
