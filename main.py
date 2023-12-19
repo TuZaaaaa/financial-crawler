@@ -1,13 +1,9 @@
 import sys
-from datetime import datetime
 
 from PyQt5 import uic
-from PyQt5.QtCore import QDateTime, QTimer, Qt
-from PyQt5.QtGui import QStandardItem, QStandardItemModel, QFont, QColor, QTextCharFormat
-from PyQt5.QtWidgets import QAction, QMainWindow, QMessageBox, QListWidgetItem
 from pyqt5_plugins.examplebutton import QtWidgets
+
 from lib.share import SI
-from db.sql_helper import SqlHelper
 
 
 class Main():
@@ -29,8 +25,7 @@ class Main():
         self.load_page("./ui/search.ui")
         self.listWidget.itemClicked.connect(self.switch_page)
 
-
-    def switch_page(self,item):
+    def switch_page(self, item):
         index = self.listWidget.row(item)
         print(index)
         self.stackedWidget.setCurrentIndex(index)
@@ -38,7 +33,6 @@ class Main():
     def load_page(self, ui_file):
         page = uic.loadUi(ui_file)
         self.stackedWidget.addWidget(page)
-
 
 
 if __name__ == '__main__':
