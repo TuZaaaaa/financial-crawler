@@ -30,7 +30,7 @@ def returnHrefTitleBody(List,TagList=''):
 
         for bodyNewsItem in bodyNewsList:
             result = re.sub(r'<*[^>]*>(.*?)<\/*[^>]*>', r'\1', str(bodyNewsItem))
-            result = re.sub(r'\u3000', '', result)
+            # result = re.sub(r'\u3000', '', result)
             resultNews = resultNews + result
             # print(TagList)
             # print(i)
@@ -67,7 +67,7 @@ def returnInternationalHrefTitleBody(List, TagList=''):
 
         for bodyNewsItem in bodyNewsList:
             result = re.sub(r'<*[^>]*>(.*?)<\/*[^>]*>', r'\1', str(bodyNewsItem))
-            result = re.sub(r'\u3000', '', result)
+            # result = re.sub(r'\u3000', '', result)
             resultNews = resultNews + result
         # print(TagList)
             # print(i)
@@ -101,7 +101,7 @@ def returnLoaclHrefTitleBody(List,TagList=''):
 
         for bodyNewsItem in bodyNewsList:
             result = re.sub(r'<*[^>]*>(.*?)<\/*[^>]*>', r'\1', str(bodyNewsItem))
-            result = re.sub(r'\u3000', '', result)
+            # result = re.sub(r'\u3000', '', result)
             resultNews = resultNews + result
         # print(TagList)
         # print(i)
