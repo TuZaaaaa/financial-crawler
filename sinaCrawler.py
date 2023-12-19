@@ -151,173 +151,187 @@ def useNoheadConnect(url):
 #     internationalEconomicNewsSpecific[href] = {'title':title,'body':resultNews}
 # print(internationalEconomicNewsSpecific)
 
+def getInternationalNews():
+    # 获取国外新闻
+    url = 'https://finance.sina.com.cn/'
+    page = urllib.request.urlopen(url)
+    soup = BeautifulSoup(page,'html.parser')
+    economicDiv = soup.find('div',attrs={'class':'m-part m-part3 udv-clearfix'})
+    moreEconomicNews = economicDiv.find('div',{'class':'part right fright'})
+    # print(moreEconomicNews)
+    moreEconomicNewshref=moreEconomicNews.find('a')['href']
+    # print(moreEconomicNewshref)
+    page = urllib.request.urlopen(moreEconomicNewshref)
+    # print(page)
+    soup = BeautifulSoup(page,'html.parser')
+    # print(soup)
+    # 找到包含重定向信息的 meta 标签
+    meta_refresh_tag = soup.find('meta', {'http-equiv': 'refresh'})
+    redirect_url=''
+    if meta_refresh_tag:
+        # 获取 content 属性中的重定向 URL
+        content = meta_refresh_tag.get('content', '')
+        redirect_url = content.split('URL=')[1] if 'URL=' in content else ''
+    # print(redirect_url)
+    # 设置 Chrome 无头模式
+    chrome_options = Options()
+    chrome_options.add_argument('--headless')  # 无头模式
+    chrome_options.add_argument('--disable-gpu')  # 禁用GPU加速
+    # chrome_options.add_argument('--disable-software-rasterizer') #GPU加速
 
-# 获取国外新闻
-url = 'https://finance.sina.com.cn/'
-page = urllib.request.urlopen(url)
-soup = BeautifulSoup(page,'html.parser')
-economicDiv = soup.find('div',attrs={'class':'m-part m-part3 udv-clearfix'})
-moreEconomicNews = economicDiv.find('div',{'class':'part right fright'})
-# print(moreEconomicNews)
-moreEconomicNewshref=moreEconomicNews.find('a')['href']
-# print(moreEconomicNewshref)
-page = urllib.request.urlopen(moreEconomicNewshref)
-# print(page)
-soup = BeautifulSoup(page,'html.parser')
-# print(soup)
-# 找到包含重定向信息的 meta 标签
-meta_refresh_tag = soup.find('meta', {'http-equiv': 'refresh'})
-redirect_url=''
-if meta_refresh_tag:
-    # 获取 content 属性中的重定向 URL
-    content = meta_refresh_tag.get('content', '')
-    redirect_url = content.split('URL=')[1] if 'URL=' in content else ''
-# print(redirect_url)
-# 设置 Chrome 无头模式
-chrome_options = Options()
-chrome_options.add_argument('--headless')  # 无头模式
-chrome_options.add_argument('--disable-gpu')  # 禁用GPU加速
-# chrome_options.add_argument('--disable-software-rasterizer') #GPU加速
+    # 创建 Chrome 浏览器对象
+    browser = webdriver.Chrome(options=chrome_options)
 
-# 创建 Chrome 浏览器对象
-browser = webdriver.Chrome(options=chrome_options)
+    # 打开网页
+    browser.get(redirect_url)
 
-# 打开网页
-browser.get(redirect_url)
+    # 等待一定时间，确保页面加载完成（可以根据实际情况调整）
+    browser.implicitly_wait(1)
 
-# 等待一定时间，确保页面加载完成（可以根据实际情况调整）
-browser.implicitly_wait(1)
+    # 获取页面内容
+    page_content = browser.page_source
 
-# 获取页面内容
-page_content = browser.page_source
+    # 关闭浏览器
+    browser.quit()
 
-# 关闭浏览器
-browser.quit()
+    # print(type(page_content))
+    soup = BeautifulSoup(page_content,'html.parser')
+    moreEconomicNewsDiv=soup.find('div',{'class':'cardlist-a__list'})
+    # print(moreEconomicNewsDiv)
+    moreEconomicNewsList={}
+    moreEconomicNewsH3 = moreEconomicNewsDiv.find_all('h3',{'class':'ty-card-tt'})
+    moreEconomicNewsTagSpan = moreEconomicNewsDiv.find_all('span',{'class':'ty-card-tip2-i ty-card-tags'})
+    moreEconomicNewsTags=[]
+    for moreEconomicNewsTagItem in moreEconomicNewsTagSpan:
+        # print(moreEconomicNewsTagItem.find_all('a'))
+        moreEconomicNewsTag=[]
+        for moreEconomicNewsTagItem2 in moreEconomicNewsTagItem.find_all('a'):
+            # print(moreEconomicNewsTagItem2)
+            moreEconomicNewsTag.append(moreEconomicNewsTagItem2.get_text())
+        moreEconomicNewsTags.append(moreEconomicNewsTag)
+    # print(moreEconomicNewsTags)
 
-# print(type(page_content))
-soup = BeautifulSoup(page_content,'html.parser')
-moreEconomicNewsDiv=soup.find('div',{'class':'cardlist-a__list'})
-# print(moreEconomicNewsDiv)
-moreEconomicNewsList={}
-moreEconomicNewsH3 = moreEconomicNewsDiv.find_all('h3',{'class':'ty-card-tt'})
-moreEconomicNewsTagSpan = moreEconomicNewsDiv.find_all('span',{'class':'ty-card-tip2-i ty-card-tags'})
-moreEconomicNewsTags=[]
-for moreEconomicNewsTagItem in moreEconomicNewsTagSpan:
-    # print(moreEconomicNewsTagItem.find_all('a'))
-    moreEconomicNewsTag=[]
-    for moreEconomicNewsTagItem2 in moreEconomicNewsTagItem.find_all('a'):
-        # print(moreEconomicNewsTagItem2)
-        moreEconomicNewsTag.append(moreEconomicNewsTagItem2.get_text())
-    moreEconomicNewsTags.append(moreEconomicNewsTag)
-# print(moreEconomicNewsTags)
+    for moreEconomicNewsItem in moreEconomicNewsH3:
+        # print(moreEconomicNewsItem.find('a')['href'])
+        moreEconomicNewsList[moreEconomicNewsItem.find('a').get_text()]=moreEconomicNewsItem.find('a')['href']
+    # print(moreEconomicNewsList)
 
-for moreEconomicNewsItem in moreEconomicNewsH3:
-    # print(moreEconomicNewsItem.find('a')['href'])
-    moreEconomicNewsList[moreEconomicNewsItem.find('a').get_text()]=moreEconomicNewsItem.find('a')['href']
-# print(moreEconomicNewsList)
+    moreEconomicNewsSpecific = returnInternationalHrefTitleBody(moreEconomicNewsList,TagList=moreEconomicNewsTags)
+    # print(moreEconomicNewsSpecific)
+    db = SqlHelper()
+    db.modify(f'truncate table sina_crawler_InternationalNews', [])
+    article_list=[]
+    for href,item in moreEconomicNewsSpecific.items():
+        # print(href,item)
+        ags_str = ','.join(item['tag'])
+        article_list.append((item['title'],item['time'],ags_str,item['body']))
+        # print(article_list)
+    db.multiple_modify(f'insert into sina_crawler_InternationalNews values(null, %s, %s, %s, %s)', article_list)
+    print('国际新闻爬取完成')
+    return 1
 
-moreEconomicNewsSpecific = returnInternationalHrefTitleBody(moreEconomicNewsList,TagList=moreEconomicNewsTags)
-# print(moreEconomicNewsSpecific)
-db = SqlHelper()
-db.modify(f'truncate table sina_crawler_InternationalNews', [])
-article_list=[]
-for href,item in moreEconomicNewsSpecific.items():
-    # print(href,item)
-    ags_str = ','.join(item['tag'])
-    article_list.append((item['title'],item['time'],ags_str,item['body']))
-    # print(article_list)
-db.multiple_modify(f'insert into sina_crawler_InternationalNews values(null, %s, %s, %s, %s)', article_list)
+def getNationalNews():
+    # 获取国内新闻
+    nationalNewsList = {}
+    page_content = useNoheadConnect('https://finance.sina.com.cn/')
+    soup = BeautifulSoup(page_content,'html.parser')
+    # print(soup)
+    nationalNewsDiv=soup.find_all('div',{'class','udv-clearfix m-more-tab'})[1]
+    # print(nationalNewsDiv)
+    # print(nationalNewsDiv.find_all('a'))
+
+    nationalNewsHref = nationalNewsDiv.find_all('a')[0]['href']
+    # print(nationalNewsHref)
+    # page_content = useNoheadConnect(nationalNewsHref)
 
 
-# 获取国内新闻
-nationalNewsList = {}
-page_content = useNoheadConnect('https://finance.sina.com.cn/')
-soup = BeautifulSoup(page_content,'html.parser')
-# print(soup)
-nationalNewsDiv=soup.find_all('div',{'class','udv-clearfix m-more-tab'})[1]
-# print(nationalNewsDiv)
-# print(nationalNewsDiv.find_all('a'))
+    url = nationalNewsHref
+    chrome_options = webdriver.ChromeOptions()
+    chrome_options.add_argument('--headless')  # 无头模式
+    # 创建 Chrome 浏览器对象
+    browser = webdriver.Chrome(options=chrome_options)
+    browser.get(url)
+    TagList=[]
+    while len(nationalNewsList)<100:
+        print(len(nationalNewsList))
+        page_content = browser.page_source
+        soup = BeautifulSoup(page_content, 'html.parser')
+        # print(soup)
+        nationalNewsDiv2 = soup.find('div', {'class': 'feed-card-content'})
+        nationalNewsTagDiv = nationalNewsDiv2.find_all('div',{'class':'feed-card-tags'})
+        # print(nationalNewsTagDiv)
+        for nationalNewsTagItem in nationalNewsTagDiv:
+            # print(nationalNewsTagItem)
+            nationalNewsTags = nationalNewsTagItem.find_all('a')
+            nationalNewsTagsList = []
+            for nationalNewsTagsItem in nationalNewsTags:
+                # print(nationalNewsTagsItem.get_text())
+                nationalNewsTagsList.append(nationalNewsTagsItem.get_text())
+            TagList.append(nationalNewsTagsList)
+        nationalNewsDivH2 = nationalNewsDiv2.find_all('h2')
+        # print(nationalNewsDivH2)
+        for nationalNewsItem in nationalNewsDivH2:
+            # print(nationalNewsItem.find('div',{'class':'feed-card-tags'}))
+            nationalNewsList[nationalNewsItem.find('a').get_text()] = nationalNewsItem.find('a')['href']
 
-nationalNewsHref = nationalNewsDiv.find_all('a')[0]['href']
-# print(nationalNewsHref)
-# page_content = useNoheadConnect(nationalNewsHref)
+        browser.execute_script("document.querySelector('.pagebox_next a').click();")
+        time.sleep(1)
+    # print(len(TagList))
+    # 关闭浏览器
+    browser.quit()
+    # print(returnHrefTitleBody(nationalNewsList,TagList))
+    db = SqlHelper()
+    # print(returnHrefTitleBody(nationalNewsList,TagList=TagList))
+    db.modify(f'truncate table sina_crawler_nationalNews', [])
+    article_list=[]
+    for href,item in returnHrefTitleBody(nationalNewsList,TagList=TagList).items():
+        ags_str = ','.join(item['tag'])
+        article_list.append((item['title'],item['time'],ags_str,item['body']))
+        # print(article_list)
+    db.multiple_modify(f'insert into sina_crawler_nationalNews values(null, %s, %s, %s, %s)', article_list)
+    print('国内新闻爬取完成')
+    return 1
 
-
-url = nationalNewsHref
-chrome_options = webdriver.ChromeOptions()
-chrome_options.add_argument('--headless')  # 无头模式
-# 创建 Chrome 浏览器对象
-browser = webdriver.Chrome(options=chrome_options)
-browser.get(url)
-TagList=[]
-while len(nationalNewsList)<100:
-    print(len(nationalNewsList))
+def getLocalNews():
+    # 当地新闻
+    nationalNewsList = {}
+    page_content = useNoheadConnect('https://finance.sina.com.cn/')
+    soup = BeautifulSoup(page_content, 'html.parser')
+    # print(soup)
+    nationalNewsDiv = soup.find_all('div', {'class', 'udv-clearfix m-more-tab'})[1]
+    # print(nationalNewsDiv.find_all('a'))
+    localNewsHref = nationalNewsDiv.find_all('a')[2]['href']
+    # print(localNewsHref)
+    url = localNewsHref
+    chrome_options = webdriver.ChromeOptions()
+    chrome_options.add_argument('--headless')  # 无头模式
+    # 创建 Chrome 浏览器对象
+    browser = webdriver.Chrome(options=chrome_options)
+    browser.get(url)
     page_content = browser.page_source
     soup = BeautifulSoup(page_content, 'html.parser')
     # print(soup)
-    nationalNewsDiv2 = soup.find('div', {'class': 'feed-card-content'})
-    nationalNewsTagDiv = nationalNewsDiv2.find_all('div',{'class':'feed-card-tags'})
-    # print(nationalNewsTagDiv)
-    for nationalNewsTagItem in nationalNewsTagDiv:
-        # print(nationalNewsTagItem)
-        nationalNewsTags = nationalNewsTagItem.find_all('a')
-        nationalNewsTagsList = []
-        for nationalNewsTagsItem in nationalNewsTags:
-            # print(nationalNewsTagsItem.get_text())
-            nationalNewsTagsList.append(nationalNewsTagsItem.get_text())
-        TagList.append(nationalNewsTagsList)
-    nationalNewsDivH2 = nationalNewsDiv2.find_all('h2')
-    # print(nationalNewsDivH2)
-    for nationalNewsItem in nationalNewsDivH2:
-        # print(nationalNewsItem.find('div',{'class':'feed-card-tags'}))
-        nationalNewsList[nationalNewsItem.find('a').get_text()] = nationalNewsItem.find('a')['href']
+    # print(soup.find('ul',{'class':'news-list cur'}))
+    localNewsH2 = soup.find('ul', {'class': 'news-list cur'}).find_all('h2')
+    localNewsList = {}
+    for localNewsItem in localNewsH2:
+        # print(localNewsItem.find('a'))
+        localNewsList[localNewsItem.find('a').get_text()] = localNewsItem.find('a')['href']
+    # print(localNewsList)
+    # print(returnLoaclHrefTitleBody(localNewsList))
+    db = SqlHelper()
 
-    browser.execute_script("document.querySelector('.pagebox_next a').click();")
-    time.sleep(1)
-# print(len(TagList))
-# 关闭浏览器
-browser.quit()
-# print(returnHrefTitleBody(nationalNewsList,TagList))
-db = SqlHelper()
-# print(returnHrefTitleBody(nationalNewsList,TagList=TagList))
-db.modify(f'truncate table sina_crawler_nationalNews', [])
-article_list=[]
-for href,item in returnHrefTitleBody(nationalNewsList,TagList=TagList).items():
-    ags_str = ','.join(item['tag'])
-    article_list.append((item['title'],item['time'],ags_str,item['body']))
-    # print(article_list)
-db.multiple_modify(f'insert into sina_crawler_nationalNews values(null, %s, %s, %s, %s)', article_list)
+    db.modify(f'truncate table sina_crawler_LocalNews', [])
+    article_list=[]
+    for href,item in returnLoaclHrefTitleBody(localNewsList).items():
+        ags_str = ','.join(item['tag'])
+        article_list.append((item['title'],item['time'],ags_str,item['body']))
+        # print(article_list)
+    db.multiple_modify(f'insert into sina_crawler_LocalNews values(null, %s, %s, %s, %s)', article_list)
+    print('本地新闻爬取完成')
+    return 1
 
-
-# 当地新闻
-# print(nationalNewsDiv.find_all('a'))
-localNewsHref = nationalNewsDiv.find_all('a')[2]['href']
-# print(localNewsHref)
-url = localNewsHref
-chrome_options = webdriver.ChromeOptions()
-chrome_options.add_argument('--headless')  # 无头模式
-# 创建 Chrome 浏览器对象
-browser = webdriver.Chrome(options=chrome_options)
-browser.get(url)
-page_content = browser.page_source
-soup = BeautifulSoup(page_content, 'html.parser')
-# print(soup)
-# print(soup.find('ul',{'class':'news-list cur'}))
-localNewsH2 = soup.find('ul', {'class': 'news-list cur'}).find_all('h2')
-localNewsList = {}
-for localNewsItem in localNewsH2:
-    # print(localNewsItem.find('a'))
-    localNewsList[localNewsItem.find('a').get_text()] = localNewsItem.find('a')['href']
-# print(localNewsList)
-# print(returnLoaclHrefTitleBody(localNewsList))
-db = SqlHelper()
-
-db.modify(f'truncate table sina_crawler_LocalNews', [])
-article_list=[]
-for href,item in returnLoaclHrefTitleBody(localNewsList).items():
-    ags_str = ','.join(item['tag'])
-    article_list.append((item['title'],item['time'],ags_str,item['body']))
-    # print(article_list)
-db.multiple_modify(f'insert into sina_crawler_LocalNews values(null, %s, %s, %s, %s)', article_list)
-
-print('全部爬取完成')
+if __name__ == '__main__':
+    getInternationalNews()
+    getNationalNews()
+    getLocalNews()
