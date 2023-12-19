@@ -4,6 +4,7 @@ from PyQt5 import uic
 from PyQt5.QtWidgets import QMessageBox
 from pyqt5_plugins.examplebutton import QtWidgets
 
+import search
 from lib.share import SI
 
 
@@ -21,12 +22,18 @@ class Main():
         self.listWidget = self.ui.listWidget
         self.stackedWidget = self.ui.stackedWidget
 
-        self.load_page('./ui/search.ui')
-        self.load_page('./ui/login.ui')
-        self.load_page("./ui/search.ui")
+
+        self.search_page = search.Search()
+
+        # 将 Search 页面添加到 stackedWidget
+        self.stackedWidget.addWidget(self.search_page.ui)
+
+
+
         self.listWidget.itemClicked.connect(self.switch_page)
         self.action_modifysina.triggered.connect(self.modify_sina)
         self.action_modifyzhenjuan.triggered.connect(self.modify_zhenjuan)
+
 
     def modify_sina(self):
         print('禁用新浪')
@@ -53,7 +60,7 @@ class Main():
 
     def switch_page(self, item):
         index = self.listWidget.row(item)
-        print(index)
+        # print(index)
         self.stackedWidget.setCurrentIndex(index)
 
     def load_page(self, ui_file):
@@ -64,5 +71,6 @@ class Main():
 if __name__ == '__main__':
     app = QtWidgets.QApplication(sys.argv)
     SI.page1 = Main()
+
     SI.page1.ui.show()
     sys.exit(app.exec_())

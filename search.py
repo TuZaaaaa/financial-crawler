@@ -4,19 +4,18 @@ from datetime import datetime
 from PyQt5 import uic
 from PyQt5.QtCore import QDateTime, QTimer, Qt
 from PyQt5.QtGui import QStandardItem, QStandardItemModel, QFont, QColor, QTextCharFormat
-from PyQt5.QtWidgets import QAction, QMainWindow, QMessageBox, QListWidgetItem
+from PyQt5.QtWidgets import QAction, QMainWindow, QMessageBox, QListWidgetItem, QWidget
 from pyqt5_plugins.examplebutton import QtWidgets
 from lib.share import SI
 from db.sql_helper import SqlHelper
 
 
-class Search():
+class Search(QWidget):
     def __init__(self):
         super(Search, self).__init__()
+        # print('加载到了')
         self.ui = uic.loadUi('./ui/search.ui')
-
-
-        self.page_main = self.ui.page_main
+        print(self.ui)
 
         self.label_time = self.ui.label_time
 
@@ -28,9 +27,6 @@ class Search():
 
         self.listWidget_hotpotarticles = self.ui.listWidget_hotpotarticles
         self.listWidget_serachresult = self.ui.listWidget_serachresult
-
-
-
 
         self.timer = QTimer()
         # print(self.timer)
@@ -49,6 +45,7 @@ class Search():
     def update_time(self):
         # 获取当前时间
         current_time = QDateTime.currentDateTime()
+        # print(current_time)
 
         # 格式化时间字符串
         formatted_time = current_time.toString("yyyy-MM-dd HH:mm:ss")
@@ -57,6 +54,7 @@ class Search():
         self.label_time.setText(formatted_time)
 
     def change_searchpage(self):
+        print('点击了搜索按钮')
         self.stackedWidget_select.setCurrentIndex(1)
         searchContant = self.lineEdit_search.text()
         print(searchContant)
