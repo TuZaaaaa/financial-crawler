@@ -6,6 +6,7 @@ from pyqt5_plugins.examplebutton import QtWidgets
 
 import search
 from lib.share import SI
+from stock_table_crawler import StockTableCrawler
 
 
 class Main():
@@ -24,9 +25,11 @@ class Main():
 
 
         self.search_page = search.Search()
+        self.stock_table_page = StockTableCrawler()
 
         # 将 Search 页面添加到 stackedWidget
         self.stackedWidget.addWidget(self.search_page.ui)
+        self.stackedWidget.addWidget(self.stock_table_page.ui)
 
 
 
