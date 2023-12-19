@@ -1,6 +1,7 @@
 import sys
 
 from PyQt5 import uic
+from PyQt5.QtWidgets import QMessageBox
 from pyqt5_plugins.examplebutton import QtWidgets
 
 from lib.share import SI
@@ -24,6 +25,31 @@ class Main():
         self.load_page('./ui/login.ui')
         self.load_page("./ui/search.ui")
         self.listWidget.itemClicked.connect(self.switch_page)
+        self.action_modifysina.triggered.connect(self.modify_sina)
+        self.action_modifyzhenjuan.triggered.connect(self.modify_zhenjuan)
+
+    def modify_sina(self):
+        print('禁用新浪')
+        # print(self.menu_sina.title())
+        if self.menu_sina.title()=='新浪√':
+            self.menu_sina.setTitle("新浪×")
+            self.action_modifysina.setText('启用')
+            QMessageBox.information(self.ui, '新浪源', '新浪源关闭', QMessageBox.Yes)
+        else:
+            self.menu_sina.setTitle("新浪√")
+            self.action_modifysina.setText('禁用')
+            QMessageBox.information(self.ui, '新浪源', '新浪源开启', QMessageBox.Yes)
+
+    def modify_zhenjuan(self):
+        print('禁用中国证券网')
+        if self.menu_zhenjuan.title()=='中国证券网√':
+            self.menu_zhenjuan.setTitle("中国证券网×")
+            self.action_modifyzhenjuan.setText('启用')
+            QMessageBox.information(self.ui, '中国证券网源', '中国证券网源关闭', QMessageBox.Yes)
+        else:
+            self.menu_zhenjuan.setTitle("中国证券网√")
+            self.action_modifyzhenjuan.setText('禁用')
+            QMessageBox.information(self.ui, '中国证券网源', '中国证券网源开启', QMessageBox.Yes)
 
     def switch_page(self, item):
         index = self.listWidget.row(item)
