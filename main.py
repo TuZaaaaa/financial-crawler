@@ -2,8 +2,8 @@ import sys
 from datetime import datetime
 
 from PyQt5 import uic
-from PyQt5.QtCore import QDateTime, QTimer
-from PyQt5.QtGui import QStandardItem, QStandardItemModel, QFont, QColor
+from PyQt5.QtCore import QDateTime, QTimer, Qt
+from PyQt5.QtGui import QStandardItem, QStandardItemModel, QFont, QColor, QTextCharFormat
 from PyQt5.QtWidgets import QAction, QMainWindow, QMessageBox, QListWidgetItem
 from pyqt5_plugins.examplebutton import QtWidgets
 from lib.share import SI
@@ -107,8 +107,18 @@ class Main():
         text_color = QColor(255, 0, 0)  # 设置文本颜色为红色
         for new in result:
             item = QListWidgetItem(f'{i}:{new["title"]}')
+
+            # 创建 QTextCharFormat 对象
+            char_format = QTextCharFormat()
+
+            # 设置文字颜色为红色
+            char_format.setForeground(QColor(255, 0, 0))
+
+            # 设置格式应用于指定范围的文本
+            item.setData(Qt.TextColorRole, char_format)
+
             self.listWidget_serachresult.addItem(item)
-            i+=1
+            i += 1
 
 
     def change_hotpotpage(self):
