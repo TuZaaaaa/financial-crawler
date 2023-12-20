@@ -25,7 +25,7 @@ class Word_analysis():
     def init_picture(self):
         try:
             print('init')
-            pixmap = QPixmap('F:\\PytorchLearning\\financial-crawler\\picture\\wordcloud.png')
+            pixmap = QPixmap('picture/wordcloud.png')
             current_pixmap = self.label_picture.pixmap()
             # if current_pixmap:
             #     self.label_picture.clear()
