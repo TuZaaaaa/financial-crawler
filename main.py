@@ -1,15 +1,12 @@
 import json
 import sys
-import time
 
 from PyQt5 import uic
-from PyQt5.QtCore import QTimer, QCoreApplication
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QMessageBox
 from pyqt5_plugins.examplebutton import QtWidgets
 
 import search
-import word_analysis
 from db.sql_helper import SqlHelper
 from lib.share import SI
 from stock_table_crawler import StockTableCrawler

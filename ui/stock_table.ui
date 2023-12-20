@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1231</width>
+    <width>900</width>
     <height>597</height>
    </rect>
   </property>
@@ -59,7 +59,7 @@
    </column>
    <column>
     <property name="text">
-     <string>新建列</string>
+     <string>振幅</string>
     </property>
    </column>
    <column>
@@ -79,17 +79,17 @@
    </column>
    <column>
     <property name="text">
-     <string>新建列</string>
-    </property>
-   </column>
-   <column>
-    <property name="text">
      <string>昨收</string>
     </property>
    </column>
    <column>
     <property name="text">
      <string>量比</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>换手率</string>
     </property>
    </column>
    <column>
@@ -121,35 +121,66 @@
     <string>沪深京A股</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_2">
+  <widget class="QLabel" name="label_record_count">
    <property name="geometry">
     <rect>
-     <x>510</x>
-     <y>40</y>
-     <width>231</width>
-     <height>61</height>
+     <x>690</x>
+     <y>480</y>
+     <width>161</width>
+     <height>31</height>
     </rect>
    </property>
    <property name="font">
     <font>
-     <pointsize>16</pointsize>
+     <pointsize>9</pointsize>
     </font>
    </property>
    <property name="text">
-    <string>加载中...</string>
+    <string>共 0 条记录</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_record_count">
+  <widget class="QPushButton" name="pushButton_query">
    <property name="geometry">
     <rect>
-     <x>670</x>
-     <y>480</y>
-     <width>111</width>
-     <height>16</height>
+     <x>680</x>
+     <y>60</y>
+     <width>93</width>
+     <height>28</height>
     </rect>
    </property>
    <property name="text">
-    <string>共 0 条记录</string>
+    <string>查询图表</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_update">
+   <property name="geometry">
+    <rect>
+     <x>560</x>
+     <y>60</y>
+     <width>93</width>
+     <height>28</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>更新至最新</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_loading">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>480</y>
+     <width>141</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>14</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Loading...</string>
    </property>
   </widget>
  </widget>
