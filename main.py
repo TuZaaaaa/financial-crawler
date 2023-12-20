@@ -19,6 +19,8 @@ class Main():
         super(Main, self).__init__()
         self.ui = uic.loadUi('./ui/main.ui')
 
+        get_word_analysis_picture()
+
         icon = QIcon('image/logo.png')  # 替换为你的图标文件的路径
         self.ui.setWindowIcon(icon)
 
