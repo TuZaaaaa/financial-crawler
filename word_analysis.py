@@ -1,6 +1,4 @@
 import sys
-import time
-from PIL import Image
 
 from PyQt5.QtGui import QPixmap
 from pyqt5_plugins.examplebutton import QtWidgets
