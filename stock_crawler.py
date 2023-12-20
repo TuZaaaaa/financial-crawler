@@ -42,6 +42,7 @@ class StockCrawler:
                 time.sleep(5)
                 print(len(li))
 
+            driver.close()
             for item in li:
                 # 标签
                 tags = []
