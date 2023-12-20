@@ -1,3 +1,4 @@
+import json
 import sys
 
 from PyQt5 import QtWidgets, uic
@@ -22,9 +23,14 @@ class Login:
         name = self.ui.lineEdit_username.text()
         password = self.ui.lineEdit_password.text()
         result = self.sql_helper.get_list('select * from user where name = %s and password = %s', [name, password])
+        print(result)
         if len(result) == 0:
             QMessageBox.warning(self.ui, '登录失败', '用户名或密码错误', QMessageBox.Yes)
         else:
+            # print(result[0]['permission'])
+            # 将数据写入 JSON 文件
+            with open('shared_data.json', 'w') as file:
+                json.dump(result, file)
             SI.main_page = Main()
             SI.main_page.ui.show()
             self.ui.hide()
