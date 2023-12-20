@@ -51,4 +51,12 @@ class WordCloudGenerate:
         # 词云生成
         self.word_cloud_generate(word_list)
         return 1
+    def getlist(self):
+        print(sys.path[0])
+        # 预处理
+        # 读取停用词列表
+        stopword_list = self.get_stopword_list(os.path.join(os.path.dirname(__file__) + './words/cn_stopwords.txt'))
+        word_list = self.pre_process(self.datasource, stopword_list)
+        # 词云生成
+        return word_list
 

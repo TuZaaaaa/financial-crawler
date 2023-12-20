@@ -111,7 +111,7 @@ class Search(QWidget):
         print(item.text())
         SI.article_reading_page = ArticleReading(item.text())
         SI.article_reading_page.ui.show()
-        self.ui.hide()
+        # self.ui.hide()
 
 
 
