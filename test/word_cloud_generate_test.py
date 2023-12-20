@@ -5,7 +5,7 @@ from word_cloud_generate import WordCloudGenerate
 
 db = SqlHelper()
 
-res = db.get_list('select * from crawler_tb1', [])
+res = db.get_list('select * from crawler_tb3', [])
 
 print(res)
 contents = ''
