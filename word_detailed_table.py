@@ -1,7 +1,7 @@
 import sys
 from collections import Counter
 from PyQt5.QtWidgets import QLabel, QVBoxLayout, QWidget
-from PyQt5.QtGui import QPixmap
+from PyQt5.QtGui import QPixmap, QIcon
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib import pyplot as plt
 from pyqt5_plugins.examplebutton import QtWidgets
@@ -14,6 +14,10 @@ from matplotlib import rcParams
 class Word_detailed_table():
     def __init__(self):
         self.ui = uic.loadUi('./ui/get_detailed_table.ui')
+
+        icon = QIcon('image/logo.png')  # 替换为你的图标文件的路径
+        self.ui.setWindowIcon(icon)
+
         self.label_table = self.ui.label_table
         self.paint_table()
 

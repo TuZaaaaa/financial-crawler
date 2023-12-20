@@ -4,6 +4,7 @@ import time
 
 from PyQt5 import uic
 from PyQt5.QtCore import QTimer, QCoreApplication
+from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QMessageBox
 from pyqt5_plugins.examplebutton import QtWidgets
 
@@ -20,6 +21,10 @@ class Main():
     def __init__(self):
         super(Main, self).__init__()
         self.ui = uic.loadUi('./ui/main.ui')
+
+        icon = QIcon('image/logo.png')  # 替换为你的图标文件的路径
+        self.ui.setWindowIcon(icon)
+
         with open('shared_data.json', 'r') as file:
             data = json.load(file)
         print(data)

@@ -2,6 +2,7 @@ import json
 import sys
 
 from PyQt5 import QtWidgets, uic
+from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QMessageBox
 
 from db.sql_helper import SqlHelper
@@ -14,6 +15,8 @@ class Login:
     def __init__(self):
         self.ui = uic.loadUi('./ui/login.ui')
         self.sql_helper = SqlHelper()
+        icon = QIcon('image/logo.png')  # 替换为你的图标文件的路径
+        self.ui.setWindowIcon(icon)
 
         # 登录
         self.ui.pushButton_login.clicked.connect(self.login)
