@@ -40,6 +40,7 @@ class StockTableCrawler:
         driver = webdriver.Chrome(options=chrome_options)
         driver.get('http://quote.eastmoney.com/stocklist.html')
         soup = BeautifulSoup(driver.page_source, 'html.parser')
+        driver.close()
         # print(soup)
 
         data_list = []

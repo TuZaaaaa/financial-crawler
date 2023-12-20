@@ -12,7 +12,7 @@ contents = ''
 for r in res:
     contents += r['content']
 
-wcg = WordCloudGenerate(contents, 'wordcloud.png')
+wcg = WordCloudGenerate(contents, '../picture/wordcloud.png')
 result = wcg.run()
 print(result)
 

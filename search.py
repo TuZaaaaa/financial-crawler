@@ -7,6 +7,8 @@ from PyQt5.QtCore import QDateTime, QTimer, Qt
 from PyQt5.QtGui import QStandardItem, QStandardItemModel, QFont, QColor, QTextCharFormat
 from PyQt5.QtWidgets import QAction, QMainWindow, QMessageBox, QListWidgetItem, QWidget
 from pyqt5_plugins.examplebutton import QtWidgets
+
+from articleReading import ArticleReading
 from lib.share import SI
 from db.sql_helper import SqlHelper
 
@@ -39,6 +41,8 @@ class Search(QWidget):
         # 连接动作的槽函数
         self.pushButton_search.clicked.connect(self.change_searchpage)
         self.pushButton_return.clicked.connect(self.change_hotpotpage)
+        self.listWidget_serachresult.itemClicked.connect(self.on_item_clicked)
+        self.listWidget_hotpotarticles.itemClicked.connect(self.on_item_clicked)
 
         self.change_hotpotpage()
 
@@ -102,6 +106,12 @@ class Search(QWidget):
         for new in result:
             item = QListWidgetItem(f'{new["id"]}:{new["title"]}')
             self.listWidget_hotpotarticles.addItem(item)
+
+    def on_item_clicked(self,item):
+        print(item.text())
+        SI.article_reading_page = ArticleReading(item.text())
+        SI.article_reading_page.ui.show()
+        # self.ui.hide()
 
 
 
