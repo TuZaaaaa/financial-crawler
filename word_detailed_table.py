@@ -29,6 +29,7 @@ class Word_detailed_table():
         figure, ax = plt.subplots()
         ax.plot(x_values, y_values, label='热点线条')
         plt.xticks(rotation=45, ha="right")  # 适当旋转 x 轴标签
+        ax.tick_params(axis='x', labelsize=8)
         ax.set_title('热点折线图')
         ax.set_xlabel('热点词')
         ax.set_ylabel('数量')
@@ -37,7 +38,7 @@ class Word_detailed_table():
         # 保存图形到临时文件
         temp_file_path = 'picture/temp_plot.png'
         rcParams['font.sans-serif'] = ['SimSun']
-        rcParams['font.size'] = 7
+        rcParams['font.size'] = 3
         figure.savefig(temp_file_path, bbox_inches='tight', pad_inches=0.1, dpi=300, format='png', transparent=True)
         plt.close(figure)
 

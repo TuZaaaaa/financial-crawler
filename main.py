@@ -77,6 +77,7 @@ class Main():
             self.permission = '0' + self.permission[1:]
             # print(self.permission)
             get_word_analysis_picture()
+            self.refreashpage()
             QMessageBox.information(self.ui, '新浪源', '新浪源关闭', QMessageBox.Yes)
 
 
@@ -88,6 +89,7 @@ class Main():
             self.permission = '1' + self.permission[1:]
             # print(self.permission)
             get_word_analysis_picture()
+            self.refreashpage()
             QMessageBox.information(self.ui, '新浪源', '新浪源开启', QMessageBox.Yes)
 
         self.user[0]['permission'] = self.permission
@@ -103,31 +105,47 @@ class Main():
             self.action_modifyzhenjuan.setText('启用')
             self.permission = self.permission[:1]+ '0'
             get_word_analysis_picture()
+            self.refreashpage()
             QMessageBox.information(self.ui, '中国证券网源', '中国证券网源关闭', QMessageBox.Yes)
         else:
             self.menu_zhenjuan.setTitle("中国证券网√")
             self.action_modifyzhenjuan.setText('禁用')
             self.permission = self.permission[:1] + '1'
             get_word_analysis_picture()
+            self.refreashpage()
             QMessageBox.information(self.ui, '中国证券网源', '中国证券网源开启', QMessageBox.Yes)
         db.modify('update user set permission=%s where id =%s', (self.permission, self.user[0]['id']))
 
+    def refreashpage(self):
+        try:
+            self.word_analysis_page = Word_analysis()
 
+            # 获取第二页的索引
+            second_page_index = 1
+
+            # 获取当前页面的索引
+            current_index = self.stackedWidget.currentIndex()
+
+            # 移除第二页
+            self.stackedWidget.removeWidget(self.stackedWidget.widget(second_page_index))
+
+            # 在第二页的位置插入新页面
+            self.stackedWidget.insertWidget(second_page_index, self.word_analysis_page.ui)
+
+            # 设置当前页为原来的页（保持当前页不变）
+            self.stackedWidget.setCurrentIndex(current_index)
+
+        except Exception as e:
+            print(e)
     def switch_page(self, item):
-        self.refresh_current_page()
-        QCoreApplication.processEvents()  # 处理事件队列，确保刷新完成
         index = self.listWidget.row(item)
         self.stackedWidget.setCurrentIndex(index)
+        self.refreashpage()
 
     def load_page(self, ui_file):
         page = uic.loadUi(ui_file)
         self.stackedWidget.addWidget(page)
 
-    def refresh_current_page(self):
-        # 刷新当前页面
-        current_widget = self.stackedWidget.currentWidget()
-        current_widget.repaint()
-        current_widget.update()
         
 
 def get_word_analysis_picture():
@@ -154,10 +172,8 @@ def get_word_analysis_picture():
         wcg = WordCloudGenerate(contents, 'picture/wordcloud.png')
         result = wcg.run()
         print(result)
-        # word_analysisObejct = Word_analysis()
-        # time.sleep(2)
-        # word_analysisObejct.init_picture()
-
+        # word_analysisObj = word_analysis.Word_analysis()
+        # word_analysisObj.init_picture()
     except Exception as e:
         print(e)
 

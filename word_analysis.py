@@ -25,11 +25,20 @@ class Word_analysis():
         SI.word_detailed_table_page.ui.show()
         # self.ui.hide()
     def init_picture(self):
-        print('init')
-        pixmap = QPixmap('F:\\PytorchLearning\\financial-crawler\\picture\\wordcloud.png')
-        self.label_picture.setPixmap(pixmap)
-        self.label_picture.update()
-        self.label_picture.repaint()
+        try:
+            print('init')
+            pixmap = QPixmap('F:\\PytorchLearning\\financial-crawler\\picture\\wordcloud.png')
+            current_pixmap = self.label_picture.pixmap()
+            # if current_pixmap:
+            #     self.label_picture.clear()
+            #     current_pixmap.detach()
+            #     print('缓存以清除')
+            self.label_picture.clear()
+                # self.label_picture.setPixmap(None)
+            self.label_picture.setPixmap(pixmap)
+        except Exception as e:
+            print(e)
+
 
 
 if __name__ == '__main__':

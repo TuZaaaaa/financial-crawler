@@ -2,7 +2,7 @@ import pymysql
 
 
 class SqlHelper:
-    def __init__(self, user='root', password='root', database='crawler_db', host='127.0.0.1', port=3307):
+    def __init__(self, user='root', password='oUV9Sx0bf3WNZ54', database='crawler_db', host='49.232.214.47', port=3307):
         self.user = user
         self.password = password
         self.database = database
