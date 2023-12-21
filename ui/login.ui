@@ -119,6 +119,32 @@
     <string> 登录</string>
    </property>
   </widget>
+  <widget class="QRadioButton" name="radioButton_update">
+   <property name="geometry">
+    <rect>
+     <x>130</x>
+     <y>280</y>
+     <width>211</width>
+     <height>19</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>将数据库更新至最新</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_update">
+   <property name="geometry">
+    <rect>
+     <x>320</x>
+     <y>280</y>
+     <width>311</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>

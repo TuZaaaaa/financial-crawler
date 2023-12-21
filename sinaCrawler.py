@@ -252,7 +252,7 @@ def getNationalNews():
     browser = webdriver.Chrome(options=chrome_options)
     browser.get(url)
     TagList=[]
-    while len(nationalNewsList)<100:
+    while len(nationalNewsList)<10:
         print(len(nationalNewsList))
         page_content = browser.page_source
         soup = BeautifulSoup(page_content, 'html.parser')
@@ -330,6 +330,13 @@ def getLocalNews():
     db.multiple_modify(f'insert into sina_crawler_LocalNews values(null, %s, %s, %s, %s)', article_list)
     print('本地新闻爬取完成')
     return 1
+
+def run():
+    # getInternationalNews()
+    # getNationalNews()
+    getLocalNews()
+    return 1
+
 
 if __name__ == '__main__':
     getInternationalNews()

@@ -14,7 +14,7 @@ ssl._create_default_https_context = ssl._create_unverified_context
 
 class StockCrawler:
 
-    def __init__(self, urls, load_num):
+    def __init__(self, urls=['https://company.cnstock.com/company/scp_gsxw/1', 'https://ggjd.cnstock.com/company/scp_ggjd/tjd_bbdj', 'https://ggjd.cnstock.com/company/scp_ggjd/tjd_ggkx', 'https://jrz.cnstock.com/'], load_num=20):
         self.urls = urls
         self.load_num = load_num
 

@@ -1,13 +1,26 @@
 import json
 import sys
+import time
 
 from PyQt5 import QtWidgets, uic
+from PyQt5.QtCore import QThread, pyqtSignal
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QMessageBox
 
+import sinaCrawler
 from db.sql_helper import SqlHelper
 from lib.share import SI
 from main import Main
+from stock_crawler import StockCrawler
+
+
+class WorkThread(QThread):
+    data_fetched_signal = pyqtSignal()
+
+    def run(self):
+        print('run')
+        Login.update_data()
+        self.data_fetched_signal.emit()
 
 
 class Login:
@@ -20,6 +33,8 @@ class Login:
 
         # 登录
         self.ui.pushButton_login.clicked.connect(self.login)
+
+        self.worker_thread = None  # 初始化时不创建线程
 
     def login(self):
         print('login')
@@ -34,10 +49,32 @@ class Login:
             # 将数据写入 JSON 文件
             with open('shared_data.json', 'w') as file:
                 json.dump(result, file)
-            SI.main_page = Main()
-            SI.main_page.ui.show()
-            self.ui.hide()
+            if self.ui.radioButton_update.isChecked():
+                self.start_update()
+            else:
+                SI.main_page = Main()
+                SI.main_page.ui.show()
+                self.ui.hide()
 
+    def start_update(self):
+        if self.worker_thread is None:
+            self.worker_thread = WorkThread()
+        if not self.worker_thread.isRunning():
+            # 添加 loading 显示
+            self.ui.label_update.setText('数据库更新中...')
+            self.worker_thread.data_fetched_signal.connect(self.on_data_fetched)
+            self.worker_thread.start()
+
+    @staticmethod
+    def update_data():
+        # 爬虫加载
+        res = sinaCrawler.run()
+        sc = StockCrawler()
+        res2 = sc.run()
+    def on_data_fetched(self):
+        SI.main_page = Main()
+        SI.main_page.ui.show()
+        self.ui.hide()
 
 if __name__ == '__main__':
     app = QtWidgets.QApplication(sys.argv)

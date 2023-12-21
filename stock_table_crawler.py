@@ -99,7 +99,7 @@ class StockTableCrawler:
         self.ui.tableWidget.update()
         # 更新 url 列表
         self.info_url_list = info_url_list
-        QMessageBox.information(self.ui, '更新至最新', '已更新至最新', QMessageBox.Yes)
+        # QMessageBox.information(self.ui, '更新至最新', '已更新至最新', QMessageBox.Yes)
         # 断开之前的连接
         self.worker_thread.data_fetched_signal.disconnect(self.on_data_fetched)
 
