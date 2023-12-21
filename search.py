@@ -102,7 +102,22 @@ class Search(QWidget):
     def change_hotpotpage(self):
         self.stackedWidget_select.setCurrentIndex(0)
         db = SqlHelper()
-        result = db.get_list('select * from sina_crawler_nationalNews',[])
+        resultsina=[]
+        resultzhenjuan=[]
+        with open('shared_data.json', 'r') as file:
+            data = json.load(file)
+        if data[0]['permission'][0] == '1':
+            resultsina = db.get_list(
+                'select * from sina_crawler_nationalNews UNION select * from sina_crawler_LocalNews  UNION select * from sina_crawler_InternationalNews ',
+                [])
+            print(resultsina)
+        if data[0]['permission'][1] == '1':
+            resultzhenjuan = db.get_list(
+                'select * from crawler_tb4   UNION select * from crawler_tb3   UNION select * from crawler_tb2  UNION select * from crawler_tb1  ;',
+                [])
+            print(resultzhenjuan)
+        result = resultsina + resultzhenjuan
+        self.listWidget_hotpotarticles.clear()
         for new in result:
             item = QListWidgetItem(f'{new["id"]}:{new["title"]}')
             self.listWidget_hotpotarticles.addItem(item)
