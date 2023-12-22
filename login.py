@@ -1,6 +1,5 @@
 import json
 import sys
-import time
 
 from PyQt5 import QtWidgets, uic
 from PyQt5.QtCore import QThread, pyqtSignal
@@ -30,6 +29,7 @@ class Login:
         self.sql_helper = SqlHelper()
         icon = QIcon('image/logo.png')  # 替换为你的图标文件的路径
         self.ui.setWindowIcon(icon)
+        self.ui.setWindowTitle('财经新闻信息抓取与分析系统')
 
         # 登录
         self.ui.pushButton_login.clicked.connect(self.login)

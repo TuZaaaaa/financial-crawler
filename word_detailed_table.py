@@ -42,7 +42,7 @@ class Word_detailed_table():
         # 保存图形到临时文件
         temp_file_path = 'picture/temp_plot.png'
         rcParams['font.sans-serif'] = ['SimSun']
-        rcParams['font.size'] = 3
+        rcParams['font.size'] = 10
         figure.savefig(temp_file_path, bbox_inches='tight', pad_inches=0.1, dpi=300, format='png', transparent=True)
         plt.close(figure)
 

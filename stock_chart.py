@@ -34,6 +34,7 @@ class StockChartCrawler:
     def __init__(self, chart_url):
         self.ui = uic.loadUi('./ui/stock_chart.ui')
         icon = QIcon('image/logo.png')  # 替换为你的图标文件的路径
+        self.ui.setWindowTitle('财经新闻信息抓取与分析系统')
         self.ui.setWindowIcon(icon)
         self.chart_url = chart_url
 
@@ -65,17 +66,19 @@ class StockChartCrawler:
         img = soup.select('.time_static_img img')[0]
         img_src = img['src']
         print(img_src)
-
-        # driver.get('https://webquotepic.eastmoney.com/GetPic.aspx?imageType=r&type=&token=44c9d251add88e27b65ed86506f6e5da&nid=0.833284&timespan=1702982769')
         driver.get('http:' + img_src)
         soup = BeautifulSoup(driver.page_source, 'html.parser')
         print(soup)
-        driver.execute_script("var img = document.querySelector('img');var canvas = document.createElement('canvas'); var ctx = canvas.getContext('2d'); canvas.width = img.width;; canvas.height = img.height; ctx.drawImage(img, 0, 0); var dataURL = canvas.toDataURL('image/png'); console.log(dataURL); const paragraph = document.createElement('p'); const text = document.createTextNode(dataURL); paragraph.appendChild(text); document.body.appendChild(paragraph);")
+        driver.execute_script("var img = document.querySelector('img');var canvas = document.createElement('canvas'); "
+                              "var ctx = canvas.getContext('2d'); canvas.width = img.width;; canvas.height = "
+                              "img.height; ctx.drawImage(img, 0, 0); var dataURL = canvas.toDataURL('image/png'); "
+                              "console.log(dataURL); const paragraph = document.createElement('p'); const text = "
+                              "document.createTextNode(dataURL); paragraph.appendChild(text); "
+                              "document.body.appendChild(paragraph);")
         soup = BeautifulSoup(driver.page_source, 'html.parser')
         driver.close()
         img_data = soup.find('p').text
         print(img_data)
-
         image_data = base64.b64decode(img_data[22:])
         image = Image.open(io.BytesIO(image_data))
         image.save("img.png")

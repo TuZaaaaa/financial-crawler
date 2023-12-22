@@ -70,19 +70,13 @@ class Search(QWidget):
         resultzhenjuan=[]
         with open('shared_data.json', 'r') as file:
             data = json.load(file)
-        # print(data[0]['permission'][0])
-        # print(data[0]['permission'][0]=='1')
         if data[0]['permission'][0]=='1':
             resultsina = db.get_list('select * from sina_crawler_nationalNews where title like %s UNION select * from sina_crawler_LocalNews where title like %s UNION select * from sina_crawler_InternationalNews where title like %s ', [f'%{searchContant}%']*3)
-            print(resultsina)
         if data[0]['permission'][1] == '1':
             resultzhenjuan = db.get_list('select * from crawler_tb4 where title like %s UNION select * from crawler_tb3 where title like %s UNION select * from crawler_tb2 where title like %s UNION select * from crawler_tb1 where title like %s;', [f'%{searchContant}%']*4)
             print(resultzhenjuan)
         result=resultsina+resultzhenjuan
-        # print(result)
         i=1
-        font = QFont("Arial", 12)  # 设置字体为Arial，大小为12
-        text_color = QColor(255, 0, 0)  # 设置文本颜色为红色
         for new in result:
             item = QListWidgetItem(f'{i}:{new["title"]}')
 

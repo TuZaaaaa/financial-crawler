@@ -18,6 +18,7 @@ class Main():
     def __init__(self):
         super(Main, self).__init__()
         self.ui = uic.loadUi('./ui/main.ui')
+        self.ui.setWindowTitle('财经新闻信息抓取与分析系统')
 
         get_word_analysis_picture()
 
